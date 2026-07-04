@@ -3,7 +3,9 @@ import { InteractionType } from "../constants/discord.js";
 import statusHandler from "./statusHandler.js";
 import reportHandler from "./reportHandler.js";
 
-const interactionHandler = (req, res) => {
+import { saveInteraction } from "../services/interactionService.js";
+
+const interactionHandler = async (req, res) => {
   const interaction = req.body;
 
   if (interaction.type !== InteractionType.APPLICATION_COMMAND) {
@@ -12,16 +14,27 @@ const interactionHandler = (req, res) => {
     });
   }
 
+  // Save the interaction first
+  // await saveInteraction(interaction);
+
+  const result = await saveInteraction(interaction);
+
+  if (result.duplicate) {
+    console.log(
+      `Duplicate interaction ignored: ${interaction.id}`
+    );
+  }
+
   let response;
 
   switch (interaction.data.name) {
     case "status":
-        response = statusHandler(interaction);
-        break;
+      response = statusHandler(interaction);
+      break;
 
     case "report":
-        response = reportHandler(interaction);
-        break;
+      response = reportHandler(interaction);
+      break;
 
     default:
       response = {

@@ -2,9 +2,9 @@ import express from "express";
 import "dotenv/config";
 
 import interactionRoutes from "./routes/interactionRoutes.js";
+import dashboardRoutes from "./routes/dashboard.js";
 
 const app = express();
-
 
 // Middleware
 app.use(express.json({
@@ -17,6 +17,7 @@ app.use(express.json({
 app.get("/", (req, res) => res.send("Server is running"));
 
 app.use("/interactions", interactionRoutes);
+app.use("/dashboard", dashboardRoutes);
 
 const PORT = process.env.PORT || 3000;
 
