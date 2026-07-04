@@ -12,21 +12,27 @@ const interactionHandler = (req, res) => {
     });
   }
 
+  let response;
+
   switch (interaction.data.name) {
     case "status":
-      return statusHandler(req, res);
+        response = statusHandler(interaction);
+        break;
 
     case "report":
-      return reportHandler(req, res);
+        response = reportHandler(interaction);
+        break;
 
     default:
-      return res.json({
+      response = {
         type: 4,
         data: {
           content: "Unknown command.",
         },
-      });
+      };
   }
+
+  return res.json(response);
 };
 
 export default interactionHandler;

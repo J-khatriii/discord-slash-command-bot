@@ -1,12 +1,14 @@
-const reportHandler = (req, res) => {
-  const reportText = req.body.data.options[0].value;
+import { InteractionResponseType } from "../constants/discord.js";
 
-  return res.json({
-    type: 4,
-    data: {
-      content: `Report received: ${reportText}`,
-    },
-  });
+const reportHandler = (interaction) => {
+    const reportText = interaction.data.options[0].value;
+
+    return {
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+            content: `Report received: ${reportText}`,
+        },
+    };
 };
 
 export default reportHandler;
