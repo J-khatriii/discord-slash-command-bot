@@ -1,10 +1,13 @@
 import express from "express";
 import "dotenv/config";
+import cors from "cors";
 
 import interactionRoutes from "./routes/interactionRoutes.js";
 import dashboardRoutes from "./routes/dashboard.js";
 
 const app = express();
+
+app.use(cors());
 
 // Middleware
 app.use(express.json({
