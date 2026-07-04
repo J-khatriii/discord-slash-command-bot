@@ -28,5 +28,13 @@ export const saveInteraction = async (interaction) => {
 };
 
 export const fetchAllInteractions = async () => {
-  return await getAllInteractions();
+  const interactions = await getAllInteractions();
+
+  return interactions.map((interaction) => ({
+    id: interaction.id,
+    username: interaction.username,
+    commandName: interaction.command_name,
+    status: interaction.status,
+    createdAt: interaction.created_at,
+  }));
 };

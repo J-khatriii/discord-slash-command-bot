@@ -53,7 +53,7 @@ export const getAllInteractions = async () => {
     ORDER BY created_at DESC;
   `;
 
-  const result = await pool.query(query);
+  const { rows } = await pool.query(query);
 
-  return result.rows;
+  return rows;
 };
