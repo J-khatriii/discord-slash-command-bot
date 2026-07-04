@@ -1,16 +1,22 @@
 import express from "express";
 import "dotenv/config";
 
-import intersectionRoutes from "./routes/intersectionRoutes.js";
+import interactionRoutes from "./routes/interactionRoutes.js";
 
 const app = express();
 
-app.use(express.json());
+
+// Middleware
+app.use(express.json({
+    verify: (req, res, buffer) => {
+        req.rawBody = buffer;
+    },
+}));
 
 // Routes
 app.get("/", (req, res) => res.send("Server is running"));
 
-app.use("/intersections", intersectionRoutes);
+app.use("/interactions", interactionRoutes);
 
 const PORT = process.env.PORT || 3000;
 
