@@ -17,7 +17,12 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const requestUrl = error.config?.url || "";
+
+    if (
+      error.response?.status === 401 &&
+      !requestUrl.includes("/auth/login")
+    ) {
       localStorage.removeItem("token");
       localStorage.removeItem("username");
 
@@ -27,13 +32,5 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-export const getInteractions = async (search = "") => {
-  const response = await api.get("/dashboard/interactions", {
-    params: { search },
-  });
-
-  return response.data.data;
-};
 
 export default api;

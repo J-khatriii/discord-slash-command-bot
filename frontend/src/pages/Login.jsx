@@ -19,7 +19,17 @@ const Login = ({ onLoginSuccess }) => {
       localStorage.setItem("username", data.username);
       onLoginSuccess(data.username);
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Check your credentials and try again.");
+      const message =
+      err.response?.data?.message || "Login failed. Check your credentials and try again.";
+
+      setError(message);
+
+      setUsername("");
+      setPassword("");
+
+      setTimeout(() => {
+        setError("");
+      }, 2000);
     } finally {
       setLoading(false);
     }
@@ -51,7 +61,7 @@ const Login = ({ onLoginSuccess }) => {
 
           {error && (
             <div className="mb-5 rounded-md border border-console-danger/30 bg-console-danger/10 px-3 py-2 font-mono text-sm text-console-danger">
-              ✕ {error}
+              {error}
             </div>
           )}
 

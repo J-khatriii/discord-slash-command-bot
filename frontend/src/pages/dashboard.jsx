@@ -8,6 +8,7 @@ import StatsCard from "../components/StatsCard.jsx";
 import DashboardHeader from "../components/DashboardHeader.jsx";
 import SearchBar from "../components/SearchBar.jsx";
 import Pagination from "../components/Pagination.jsx";
+import CommandSettings from "../components/CommandSettings.jsx";
 
 const Dashboard = ({ username, onLogout }) => {
   const [interactions, setInteractions] = useState([]);
@@ -197,6 +198,8 @@ const Dashboard = ({ username, onLogout }) => {
             <StatsCard key={card.title} title={card.title} value={card.value} />
           ))}
         </div>
+
+        <CommandSettings />
 
         <SearchBar search={search} setSearch={setSearch} onSearchChange={handleSearchChange} />
 

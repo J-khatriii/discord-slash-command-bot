@@ -1,5 +1,7 @@
 import { fetchAllInteractions, fetchInteractionStats } from "../services/interactionService.js";
 
+import { getCommandConfig, setCommandEnabled } from "../config/commandConfig.js";
+
 export const getInteractions = async (req, res) => {
   try {
     const search = req.query.search || "";
@@ -8,19 +10,24 @@ export const getInteractions = async (req, res) => {
     const sortBy = req.query.sortBy || "createdAt";
     const sortOrder = req.query.sortOrder || "desc";
 
-    const result = await fetchAllInteractions(search, page, limit, sortBy, sortOrder);
+    const result = await fetchAllInteractions(
+      search,
+      page,
+      limit,
+      sortBy,
+      sortOrder
+    );
 
     return res.status(200).json({
       success: true,
       data: result.interactions,
-
       pagination: {
         page,
         limit,
         total: result.total,
         totalPages: Math.ceil(result.total / limit),
-    },
-})
+      },
+    });
   } catch (error) {
     console.error(error);
 
@@ -47,4 +54,23 @@ export const getStats = async (req, res) => {
       message: "Internal Server Error",
     });
   }
+};
+
+export const getCommandSettings = (req, res) => {
+  return res.json({
+    success: true,
+    data: getCommandConfig(),
+  });
+};
+
+export const updateCommandSetting = (req, res) => {
+  const { command } = req.params;
+  const { enabled } = req.body;
+
+  setCommandEnabled(command, enabled);
+
+  return res.json({
+    success: true,
+    message: "Configuration updated",
+  });
 };

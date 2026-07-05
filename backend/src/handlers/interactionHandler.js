@@ -5,6 +5,7 @@ import reportHandler from "./reportHandler.js";
 
 import { saveInteraction, markMirrored, markMirrorFailed } from "../services/interactionService.js";
 import { sendMirrorNotification } from "../services/mirrorService.js";
+import { isCommandEnabled } from "../config/commandConfig.js";
 
 const MIRRORED_COMMANDS = new Set(["report"]);
 
@@ -31,6 +32,17 @@ const interactionHandler = async (req, res) => {
 
   if (interaction.type !== InteractionType.APPLICATION_COMMAND) {
     return res.status(400).json({ error: "Unsupported interaction type." });
+  }
+
+  const command = interaction.data.name;
+
+  if (!isCommandEnabled(command)) {
+    return res.json({
+      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+      data: {
+        content: `The /${command} command is currently disabled by the administrator.`,
+      },
+    });
   }
 
   try {
