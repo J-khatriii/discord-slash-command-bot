@@ -1,4 +1,4 @@
-import { insertInteraction, findInteractionByDiscordId, getAllInteractions } from "../repositories/interactionRepository.js";
+import { insertInteraction, findInteractionByDiscordId, getAllInteractions, getInteractionStats } from "../repositories/interactionRepository.js";
 
 export const saveInteraction = async (interaction) => {
   const existing = await findInteractionByDiscordId(interaction.id);
@@ -27,14 +27,29 @@ export const saveInteraction = async (interaction) => {
   };
 };
 
-export const fetchAllInteractions = async () => {
-  const interactions = await getAllInteractions();
+export const fetchAllInteractions = async (search = "", page = 1, limit = 10, sortBy = "createdAt", sortOrder = "desc") => {
+  const result = await getAllInteractions(search, page, limit, sortBy, sortOrder);
 
-  return interactions.map((interaction) => ({
+  const interactions = result.interactions.map((interaction) => ({
     id: interaction.id,
     username: interaction.username,
     commandName: interaction.command_name,
     status: interaction.status,
     createdAt: interaction.created_at,
   }));
+
+  return {
+    interactions,
+    total: result.total,
+  };
+};
+
+export const fetchInteractionStats = async () => {
+  const stats = await getInteractionStats();
+
+  return {
+    totalInteractions: Number(stats.total_interactions),
+    totalReports: Number(stats.total_reports),
+    totalStatusChecks: Number(stats.total_status_checks),
+  };
 };
