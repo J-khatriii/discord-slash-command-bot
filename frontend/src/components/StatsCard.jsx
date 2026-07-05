@@ -1,11 +1,11 @@
 const StatsCard = ({ title, value }) => {
   return (
-    <div className="rounded-lg bg-white p-6 shadow">
-      <h2 className="text-sm font-medium text-gray-500">
+    <div className="group rounded-lg border border-console-border bg-console-panel p-5 transition hover:border-console-accent/50 hover:bg-console-panel-hover">
+      <h2 className="font-mono text-xs uppercase tracking-widest text-console-muted">
         {title}
       </h2>
 
-      <p className="mt-2 text-3xl font-bold">
+      <p className="mt-3 font-mono text-4xl font-semibold text-console-text transition group-hover:text-console-accent">
         {value}
       </p>
     </div>

@@ -13,6 +13,10 @@ CREATE TABLE IF NOT EXISTS interactions (
 
     status TEXT NOT NULL,
 
+    mirror_status TEXT NOT NULL DEFAULT 'not_applicable',
+
+    mirror_error TEXT,
+
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 

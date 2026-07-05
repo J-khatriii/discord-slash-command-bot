@@ -9,7 +9,7 @@ import DashboardHeader from "../components/DashboardHeader.jsx";
 import SearchBar from "../components/SearchBar.jsx";
 import Pagination from "../components/Pagination.jsx";
 
-const Dashboard = () => {
+const Dashboard = ({ username, onLogout }) => {
   const [interactions, setInteractions] = useState([]);
 
   const [stats, setStats] = useState({
@@ -148,7 +148,7 @@ const Dashboard = () => {
         pagination.page,
         pagination.limit
       );
-    }, 500);
+    }, 200);
 
     return () => clearTimeout(timer);
   }, [search]);
@@ -161,46 +161,49 @@ const Dashboard = () => {
     );
   }, [sorting]);
 
+  useEffect(() => {
+    loadInteractions(
+      search,
+      pagination.page,
+      pagination.limit
+    );
+  }, [pagination.page]);
+
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <h2 className="font-semibold text-red-600">
-          {error}
-        </h2>
+      <div className="flex min-h-screen items-center justify-center bg-console-bg font-sans">
+        <div className="rounded-lg border border-console-danger/30 bg-console-danger/10 px-6 py-4">
+          <h2 className="font-mono text-sm text-console-danger">✕ {error}</h2>
+        </div>
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <h2 className="text-xl font-semibold">
-          Loading dashboard...
-        </h2>
+      <div className="flex min-h-screen items-center justify-center bg-console-bg font-sans">
+        <h2 className="font-mono text-sm text-console-muted">loading dashboard…</h2>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="console-grid min-h-screen bg-console-bg p-6 font-sans text-console-text md:p-10">
+      <div className="mx-auto max-w-6xl">
+        <DashboardHeader onRefresh={refreshDashboard} username={username} onLogout={onLogout} />
 
-      <DashboardHeader onRefresh={refreshDashboard} />
+        <div className="grid gap-4 md:grid-cols-3">
+          {statsCards.map((card) => (
+            <StatsCard key={card.title} title={card.title} value={card.value} />
+          ))}
+        </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        {statsCards.map((card) => (
-          <StatsCard
-            key={card.title}
-            title={card.title}
-            value={card.value}
-          />
-        ))}
+        <SearchBar search={search} setSearch={setSearch} onSearchChange={handleSearchChange} />
+
+        <InteractionTable interactions={interactions} sorting={sorting} onSort={handleSort} />
+
+        <Pagination page={pagination.page} totalPages={pagination.totalPages} onPrevious={handlePrevious} onNext={handleNext} />
       </div>
-
-      <SearchBar search={search} setSearch={setSearch} onSearchChange={handleSearchChange} />
-
-      <InteractionTable interactions={interactions} sorting={sorting} onSort={handleSort} />
-
-      <Pagination page={pagination.page} totalPages={pagination.totalPages} onPrevious={handlePrevious} onNext={handleNext} />
     </div>
   );
 };

@@ -4,10 +4,15 @@ import cors from "cors";
 
 import interactionRoutes from "./routes/interactionRoutes.js";
 import dashboardRoutes from "./routes/dashboard.js";
+import authRoutes from "./routes/auth.js";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "*",
+  })
+);
 
 // Middleware
 app.use(express.json({
@@ -21,6 +26,7 @@ app.get("/", (req, res) => res.send("Server is running"));
 
 app.use("/interactions", interactionRoutes);
 app.use("/dashboard", dashboardRoutes);
+app.use("/auth", authRoutes);
 
 const PORT = process.env.PORT || 3000;
 

@@ -8,9 +8,10 @@ export const insertInteraction = async (interactionData) => {
       user_id,
       username,
       command_name,
-      status
+      status,
+      mirror_status
     )
-    VALUES ($1, $2, $3, $4, $5, $6)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING *;
   `;
 
@@ -21,11 +22,25 @@ export const insertInteraction = async (interactionData) => {
     interactionData.username,
     interactionData.commandName,
     interactionData.status,
+    interactionData.mirrorStatus ?? "not_applicable",
   ];
 
   const result = await pool.query(query, values);
 
   return result.rows[0];
+};
+
+export const setMirrorStatus = async (id, status, error = null) => {
+  const query = `
+    UPDATE interactions
+    SET mirror_status = $2, mirror_error = $3
+    WHERE id = $1
+    RETURNING *;
+  `;
+
+  const result = await pool.query(query, [id, status, error]);
+
+  return result.rows[0] || null;
 };
 
 export const findInteractionByDiscordId = async (discordInteractionId) => {
@@ -66,6 +81,8 @@ export const getAllInteractions = async (search = "", page = 1, limit = 10, sort
       username,
       command_name,
       status,
+      mirror_status,
+      mirror_error,
       created_at
     FROM interactions
     WHERE
